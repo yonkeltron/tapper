@@ -28,6 +28,14 @@ fn main() {
                         .takes_value(true)
                         .value_name("NUMBER")
                         .required(false),
+                )
+                .arg(
+                    Arg::with_name("name")
+                        .help("name of test suite")
+                        .takes_value(true)
+                        .index(1)
+                        .value_name("NAME")
+                        .required(false),
                 ),
         )
         .subcommand(
@@ -68,6 +76,30 @@ fn main() {
         ("plan", Some(plan_matches)) => {
             let raw_from = plan_matches.value_of("from").unwrap_or("0");
             let raw_to = plan_matches.value_of("to").expect("unable to read to");
+            let from = match raw_from.parse::<i32>() {
+                Ok(num) => num,
+                Err(problem) => {
+                    eprintln!(
+                        "Error parsing from option '{}' because: {}.",
+                        raw_from, problem
+                    );
+                    eprintln!("Substituting a zero.");
+                    0
+                }
+            };
+
+            let to = match raw_to.parse::<i32>() {
+                Ok(num) => num,
+                Err(problem) => {
+                    eprintln!("Error parsing to option '{}' because: {}.", raw_to, problem);
+                    eprintln!("Substituting a zero.");
+                    0
+                }
+            };
+
+            let name = plan_matches.value_of("name").unwrap_or("Untitled");
+
+            TapWriter::new(&name).plan(from, to)
         }
         ("test", Some(test_matches)) => println!("{:#?}", test_matches),
         _ => println!("No subcommand given. Try running with --help"),
