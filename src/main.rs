@@ -44,7 +44,7 @@ fn main() {
                 .author(env!("CARGO_PKG_AUTHORS"))
                 .version(env!("CARGO_PKG_VERSION"))
                 .arg(
-                    Arg::with_name("STATUS")
+                    Arg::with_name("status")
                         .help("status of test")
                         .required(true)
                         .index(1)
@@ -68,6 +68,15 @@ fn main() {
                         .takes_value(true)
                         .value_name("DIAGNOSTIC")
                         .required(false),
+                )
+                .arg(
+                    Arg::with_name("number")
+                        .help("test sequence number")
+                        .short("n")
+                        .long("number")
+                        .takes_value(true)
+                        .value_name("NUMBER")
+                        .required(true),
                 ),
         )
         .get_matches();
@@ -76,32 +85,34 @@ fn main() {
         ("plan", Some(plan_matches)) => {
             let raw_from = plan_matches.value_of("from").unwrap_or("0");
             let raw_to = plan_matches.value_of("to").expect("unable to read to");
-            let from = match raw_from.parse::<i32>() {
-                Ok(num) => num,
-                Err(problem) => {
-                    eprintln!(
-                        "Error parsing from option '{}' because: {}.",
-                        raw_from, problem
-                    );
-                    eprintln!("Substituting a zero.");
-                    0
-                }
-            };
-
-            let to = match raw_to.parse::<i32>() {
-                Ok(num) => num,
-                Err(problem) => {
-                    eprintln!("Error parsing to option '{}' because: {}.", raw_to, problem);
-                    eprintln!("Substituting a zero.");
-                    0
-                }
-            };
+            let from = raw_from.parse::<i32>().unwrap_or(-1);
+            let to = raw_to.parse::<i32>().unwrap_or(-1);
 
             let name = plan_matches.value_of("name").unwrap_or("Untitled");
 
             TapWriter::new(&name).plan(from, to)
         }
-        ("test", Some(test_matches)) => println!("{:#?}", test_matches),
+        ("test", Some(test_matches)) => {
+            let message = test_matches
+                .value_of("message")
+                .expect("unable to read message");
+            let raw_number = test_matches
+                .value_of("number")
+                .expect("unable to read number");
+
+            let number = raw_number.parse::<i32>().unwrap_or(-1);
+
+            let tap_writer = TapWriter::new("tapper");
+
+            match test_matches
+                .value_of("status")
+                .expect("unable to read status")
+            {
+                "pass" => tap_writer.ok(number, message),
+                "fail" => tap_writer.not_ok(number, message),
+                &_ => tap_writer.not_ok(number, message),
+            };
+        }
         _ => println!("No subcommand given. Try running with --help"),
     }
 }
