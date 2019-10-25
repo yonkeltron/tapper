@@ -4,6 +4,11 @@ version = "0.1.0"
 authors = ["Jonathan E. Magen <yonkeltron@gmail.com>"]
 description = "Command-line TAP generator"
 edition = "2018"
+readme = "README.adoc"
+
+[[bin]]
+name = "tapper"
+path = "src/main.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

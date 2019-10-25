@@ -1,0 +1,3 @@
+= tapper: Emitting TAP from the command line 
+
+If you're anything like me, you love http://testanything.org/[TAP] and wish that more things supported it. If this is the case, then `tapper` is for you.
