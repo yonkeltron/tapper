@@ -2,9 +2,11 @@
 name = "tapper"
 version = "0.1.0"
 authors = ["Jonathan E. Magen <yonkeltron@gmail.com>"]
-description = "Command-line TAP generator"
+description = "Command-line Test Anything Protocol (TAP) generator"
 edition = "2018"
 readme = "README.adoc"
+homepage = "https://github.com/yonkeltron/tapper"
+repository = "https://github.com/yonkeltron/tapper"
 
 [[bin]]
 name = "tapper"
