@@ -1,3 +1,25 @@
 = tapper: Emitting TAP from the command line 
 
 If you're anything like me, you love http://testanything.org/[TAP] and wish that more things supported it. If this is the case, then `tapper` is for you.
+
+This tool allows you to emit TAP streams from things like shell scripts. For example, the following Bash script:
+
+[bash]
+....
+#!/usr/bin/env bash
+
+set -e
+
+tapper plan --from 1 --to 2
+tapper test pass --number 1 --message "This is a passing test."
+tapper test fail --number 2 --message "This is a failing test."
+....
+
+The above would produce a TAP stream with a proper plan line followed by two tests, one passing and one failing.
+
+== Installation
+
+Go ahead and install it with `cargo install tapper`.
+
+You can upgrade it with `cargo install tapper --force`.
+
