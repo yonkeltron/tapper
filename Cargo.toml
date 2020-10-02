@@ -1,6 +1,6 @@
 [package]
 name = "tapper"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Jonathan E. Magen <yonkeltron@gmail.com>"]
 description = "Command-line Test Anything Protocol (TAP) generator"
 edition = "2018"
